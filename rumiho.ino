@@ -3,23 +3,12 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 
-#include "common.h"
+//#include "common.h"
 #include "private.h"
+#include "rumiho_globals.h"
+#include "rumiho_motors.h"
 
-#define IR_PIN_C A3
-#define IR_PIN_R A6
-#define IR_PIN_L A7
-
-#define SPEED_PIN_A A1
-#define SPEED_PIN_B A2
-
-int motor1pin1 = 10;  //IN1
-int motor1pin2 = 9;  //IN2
-
-int motor2pin1 = 8;  //IN3
-int motor2pin2 = 7;  //IN4
-
-int speed = 250;
+uint8_t speed = 250;
 
 int valueIR_C = -1;
 int valueIR_R = -1;
@@ -29,7 +18,6 @@ int minValue[3], maxValue[3], threshold[3]; //0 L, 1 C, 2 R
 
 int calib = 0;
 int P, D, I, erroR, precError, PIDvalue;
-
 
 float Ax, Ay, Az;
 float Gx, Gy, Gz;
@@ -54,8 +42,8 @@ void setup() {
   setPinMotor();
   printWifiStatus();
   setSpeed(speed);
-  
 }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -239,82 +227,6 @@ void webPage(WiFiClient *client){
   // break out of the while loop:
 }
 
-void setPinMotor(){
-  pinMode(motor1pin1, OUTPUT);
-  pinMode(motor1pin2, OUTPUT);
-  pinMode(motor2pin1, OUTPUT);
-  pinMode(motor2pin2, OUTPUT);
-}
-
-void setSpeed(int speed){
-  analogWrite(SPEED_PIN_A,speed);
-  analogWrite(SPEED_PIN_B,speed);
-}
-
-void move_forward(){
-  setSpeed(speed);
-  digitalWrite(motor1pin1, HIGH);
-  digitalWrite(motor1pin2, LOW);
-
-  digitalWrite(motor2pin1, HIGH);
-  digitalWrite(motor2pin2, LOW);
-}
-
-void move_backward(){
-  setSpeed(speed);
-  digitalWrite(motor1pin1, LOW);
-  digitalWrite(motor1pin2, HIGH);
-
-  digitalWrite(motor2pin1, LOW);
-  digitalWrite(motor2pin2, HIGH);
-}
-
-void turn_left_inplace(){
-  setSpeed(speed);
-  digitalWrite(motor1pin1, LOW);
-  digitalWrite(motor1pin2, HIGH);
-
-  digitalWrite(motor2pin1, HIGH);
-  digitalWrite(motor2pin2, LOW);
-}
-
-void turn_right_inplace(){
-  setSpeed(speed);
-  digitalWrite(motor1pin1, HIGH);
-  digitalWrite(motor1pin2, LOW);
-
-  digitalWrite(motor2pin1, LOW);
-  digitalWrite(motor2pin2, HIGH);
-}
-
-void turn_right(){
-  
-  analogWrite(SPEED_PIN_A,speed);
-  analogWrite(SPEED_PIN_B,100);
-
-  digitalWrite(motor1pin1, HIGH);
-  digitalWrite(motor1pin2, LOW);
-
-  digitalWrite(motor2pin1, LOW);
-  digitalWrite(motor2pin2, HIGH);
-}
-
-void turn_left(){
-
-  analogWrite(SPEED_PIN_A,100);
-  analogWrite(SPEED_PIN_B,speed);
-  
-  digitalWrite(motor1pin1, LOW);
-  digitalWrite(motor1pin2, HIGH);
-
-  digitalWrite(motor2pin1, HIGH);
-  digitalWrite(motor2pin2, LOW);
-}
-
-void move_stop(){
-  setSpeed(0);
-}
-
 int calibrate(){
 
   //read the initial value
@@ -387,11 +299,8 @@ void line_follow(){
   }
 }
 
-/*void pippo(){
 
-  valueIR_R = analogRead(IR_PIN_R);
-  valueIR_L = analogRead(IR_PIN_L);
 
-  error = valueIR_R - valueIR_L;
-}*/
+
+
 //commento porta fortuna :)
