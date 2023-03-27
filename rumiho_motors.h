@@ -1,9 +1,5 @@
 #pragma once
 
-#define IR_PIN_C A3
-#define IR_PIN_R A6
-#define IR_PIN_L A7
-
 #define SPEED_PIN_A A1
 #define SPEED_PIN_B A2
 /*

@@ -1,22 +1,19 @@
 //#include <ArduinoBLE.h>
-#include <Arduino_LSM6DSOX.h>
+
 #include <SPI.h>
 #include <WiFiNINA.h>
+#include <Arduino_LSM6DSOX.h>
 
 //#include "common.h"
 #include "private.h"
 #include "rumiho_globals.h"
 #include "rumiho_motors.h"
+#include "rumiho_imu.h"
+#include "rumiho_drive.h"
 
 uint8_t speed = 250;
 
-int valueIR_C = -1;
-int valueIR_R = -1;
-int valueIR_L = -1;
-
-int minValue[3], maxValue[3], threshold[3]; //0 L, 1 C, 2 R
-
-int calib = 0;
+int8_t calib = 0;
 int P, D, I, erroR, precError, PIDvalue;
 
 float Ax, Ay, Az;
@@ -226,81 +223,5 @@ void webPage(WiFiClient *client){
   client->println();
   // break out of the while loop:
 }
-
-int calibrate(){
-
-  //read the initial value
-  valueIR_R = analogRead(IR_PIN_R);
-  valueIR_C = analogRead(IR_PIN_C);
-  valueIR_L = analogRead(IR_PIN_L);
-  
-  minValue[0] = valueIR_R;
-  maxValue[0] = valueIR_R;
-
-  minValue[1] = valueIR_C;
-  maxValue[1] = valueIR_C;
-
-  minValue[2] = valueIR_L;
-  maxValue[2] = valueIR_L;
-
-  for(int i = 0; i < 3100; i++){
-    turn_right_inplace();
-
-    valueIR_R = analogRead(IR_PIN_R);
-    valueIR_C = analogRead(IR_PIN_C);
-    valueIR_L = analogRead(IR_PIN_L);
-
-    if(valueIR_L > maxValue[0]) maxValue[0] = valueIR_L;
-    if(valueIR_L < minValue[0]) minValue[0] = valueIR_L;
-
-    if(valueIR_C > maxValue[1]) maxValue[1] = valueIR_C;
-    if(valueIR_C < minValue[1]) minValue[1] = valueIR_C;
-    
-    if(valueIR_R > maxValue[2]) maxValue[2] = valueIR_R;
-    if(valueIR_R < minValue[2]) minValue[2] = valueIR_R;
-
-  }
-
-  move_stop();
-  
-  for(int i = 0; i < 3; i++){
-    threshold[i] = (minValue[i] + maxValue[i]) >> 1;
-  }
-
-  return 1;
-}
-
-void line_follow(){
-  while(1){
-    valueIR_R = analogRead(IR_PIN_R);
-    valueIR_C = analogRead(IR_PIN_C);
-    valueIR_L = analogRead(IR_PIN_L);
-    
-    /*if(valueIR_L > threshold[0] && valueIR_C > threshold[1]){
-      turn_left_inplace();
-    }*/
-    if(valueIR_C > threshold[1]){
-      move_forward();
-    }
-    /*else if(valueIR_R > threshold[2] && valueIR_C > threshold[1]){
-      turn_right_inplace();
-    }
-    else if(valueIR_C > threshold[1]){
-      move_forward();
-    }*/
-    else if(valueIR_R > threshold[2]){
-      //turn_left();
-      turn_right_inplace();
-    }
-    else if(valueIR_L > threshold[0]){
-      //turn_right();
-      turn_left_inplace();
-    }
-  }
-}
-
-
-
-
 
 //commento porta fortuna :)
