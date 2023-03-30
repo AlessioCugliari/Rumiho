@@ -10,6 +10,7 @@
 #include "rumiho_motors.h"
 #include "rumiho_imu.h"
 #include "rumiho_drive.h"
+#include "rumiho_web.h"
 
 uint8_t speed = 250;
 
@@ -57,12 +58,8 @@ void loop() {
   Serial.print("    Sensor Value L: ");
   Serial.println(valueIR_L);*/
   
-  if(rssi){
-    digitalWrite(LEDB, HIGH);
-    }
-    else{
-      digitalWrite(LEDR, HIGH);
-    }
+  rssi_led_notity();
+
   if(IMU.accelerationAvailable()){
     IMU.readAcceleration(Ax, Ay, Az);
   }
@@ -75,6 +72,7 @@ void loop() {
   if(client){
     Serial.println("new client");           // print a message out the serial port
     String currentLine = "";
+    rssi = WiFi.RSSI();
     if(rssi){
       digitalWrite(LEDB, LOW);
     }
@@ -164,27 +162,6 @@ void wifiSetup(){
     delay(10000); // wait 10 seconds for connection
   }
   server.begin();
-}
-
-void printWifiStatus() {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
-
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
-
-  // print the received signal strength:
-  rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
-
-  // print where to go in a browser:
-  Serial.print("To see this page in action, open a browser to http://");
-  Serial.println(ip);
 }
 
 void webPage(WiFiClient *client){
