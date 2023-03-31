@@ -8,3 +8,5 @@ void rssi_led_notity();
 void printWifiStatus();
 
 void webPage(WiFiClient *client, int8_t calib);
+
+void doCommand(String command, int8_t *calib);

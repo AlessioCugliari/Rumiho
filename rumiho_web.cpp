@@ -1,6 +1,8 @@
 #include <WiFiNINA.h>
 
 #include "rumiho_web.h"
+#include "rumiho_motors.h"
+#include "rumiho_drive.h"
 
 void rssi_led_notity(){
     long rssi = WiFi.RSSI();
@@ -69,4 +71,42 @@ void webPage(WiFiClient *client, int8_t calib){
     // The HTTP response ends with another blank line:
     client->println();
     // break out of the while loop:
+}
+
+void doCommand(String command, int8_t *calib){
+    if (command.endsWith("GET /UP")) {
+        move_forward();
+        return;
+    }
+    if (command.endsWith("GET /DOWN")) {
+        move_backward();
+        return;           
+    }
+    if (command.endsWith("GET /RIGHT")) {
+        turn_right_inplace();
+        return;                
+    }
+    if (command.endsWith("GET /LEFT")) {
+        turn_left_inplace();
+        return;         
+    }
+    if (command.endsWith("GET /LINE")) {
+        *calib = calibrate();            
+    }
+    if (command.endsWith("GET /STOP")) {
+        move_stop();
+        return;              
+    }
+    if (command.endsWith("GET /RIGHT2")) {
+        turn_right();
+        return;                
+    }
+    if (command.endsWith("GET /LEFT2")) {
+        turn_left();
+        return;         
+    }
+    if (command.endsWith("GET /START")) {
+        line_follow();
+        return;         
+    }  
 }

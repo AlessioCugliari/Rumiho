@@ -96,52 +96,13 @@ void loop() {
         }else if(c != '\r'){  // if you got anything else but a carriage return character,
           currentLine += c;   // add it to the end of the currentLine
         }
-        doCommand(currentLine);     
+        doCommand(currentLine,&calib);     
       }
     }
     // close the connection
     client.stop();
     Serial.println("client disconnected");
   }    
-}
-
-void doCommand(String command){
-  if (command.endsWith("GET /UP")) {
-    move_forward();
-    return;
-  }
-  if (command.endsWith("GET /DOWN")) {
-    move_backward();
-    return;           
-  }
-  if (command.endsWith("GET /RIGHT")) {
-    turn_right_inplace();
-    return;                
-  }
-  if (command.endsWith("GET /LEFT")) {
-    turn_left_inplace();
-    return;         
-  }
-  if (command.endsWith("GET /LINE")) {
-    calib = calibrate();            
-  }
-  if (command.endsWith("GET /STOP")) {
-    move_stop();
-    return;              
-  }
-  if (command.endsWith("GET /RIGHT2")) {
-    turn_right();
-    return;                
-  }
-  if (command.endsWith("GET /LEFT2")) {
-    turn_left();
-    return;         
-  }
-  if (command.endsWith("GET /START")) {
-    line_follow();
-    return;         
-  }
-  
 }
 
 void wifiSetup(){
