@@ -36,7 +36,8 @@ void setup() {
   //while(!Serial);   //wait to open the serial son we don't miss information
   IMU.begin();
   
-  wifiSetup();
+  wifiSetup(ssid,pass,status);
+  server.begin();
   setPinMotor();
   printWifiStatus();
   setSpeed(speed);
@@ -103,26 +104,6 @@ void loop() {
     client.stop();
     Serial.println("client disconnected");
   }    
-}
-
-void wifiSetup(){
-  // check for the WiFi module:
-  WiFi.setHostname("Rumiho");
-  if (WiFi.status() == WL_NO_MODULE) {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
-  }
-  //attemp to conncet to WiFi
-  while(status != WL_CONNECTED){
-    Serial.print("Attempting to connect to Network named: ");
-    Serial.println(ssid);                   // print the network name (SSID);
-
-    // Connect to WPA/WPA2 network.
-    status = WiFi.begin(ssid,pass);
-    delay(10000); // wait 10 seconds for connection
-  }
-  server.begin();
 }
 
 //commento porta fortuna :)

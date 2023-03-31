@@ -36,6 +36,26 @@ void printWifiStatus() {
     Serial.println(ip);
 }
 
+void wifiSetup(char *ssid, char *pass, int status){
+    // check for the WiFi module:
+    WiFi.setHostname("Rumiho");
+    if (WiFi.status() == WL_NO_MODULE) {
+        Serial.println("Communication with WiFi module failed!");
+        // don't continue
+        while (true);
+    }
+    //attemp to conncet to WiFi
+    while(status != WL_CONNECTED){
+        Serial.print("Attempting to connect to Network named: ");
+        Serial.println(ssid);                   // print the network name (SSID);
+
+        // Connect to WPA/WPA2 network.
+        status = WiFi.begin(ssid,pass);
+        delay(10000); // wait 10 seconds for connection
+    }
+    //server.begin();
+}
+
 void webPage(WiFiClient *client, int8_t calib){
     // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
     // and a content-type so the client knows what's coming, then a blank line:
